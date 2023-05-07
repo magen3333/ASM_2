@@ -1,0 +1,42 @@
+<script src="../../static/js/calendar.js"></script>
+<div th:fragment="shifts">
+
+<!-- Add variables from page model) -->
+<script th:inline="javascript">
+window["shiftsAssigned"] = /*[[${shiftsAssigned}]]*/ "";
+window["shiftsNum"] = parseInt(/*[[${numberOfShiftsPerDay}]]*/ "");
+window["daysMonths"] = parseInt(/*[[${daysInMonth}]]*/ "");
+window["year"] = parseInt(/*[[${year}]]*/ "");
+window["month"] = parseInt(/*[[${month}]]*/ "");
+
+window["userId"] = "(" + /*[[${userObject.getId()}]]*/ "";
+window["userId"] = window["userId"] + ")";
+</script>
+
+	<header class="w3-container" style="padding-top: 22px">
+		<h5>
+			<b><i class="fa fa-calendar-check-o"></i> Shifts Calendar</b>
+		</h5>
+	</header>
+	
+	
+	<div th:if="${(isRegistrationOpen == false) AND (subPageId == 'registration')}">
+		<div class="alert alert-info">Shifts registration is closed at the moment.</div>
+	</div>
+	
+	<div th:if="${(isRegistrationOpen == true) OR (subPageId == 'shiftsView')}">
+		<div th:if="${param.success}">
+			<div class="alert alert-info">You've have successfully saved your shifts!</div>
+		</div>
+	
+		<div lang="en" th:replace="fragments/calendar :: calendar"></div>
+		<br> <br>
+		
+		<div th:if="${subPageId == 'registration'}">
+				<form id="submitShifts" onsubmit="onSubmit();" action="/shifts/registration">
+				<input id="submitBtn" class="btn btn-success btn-lg btn-block"
+					type="submit" value="Save" />
+			</form>
+		</div>
+	</div>
+</div>

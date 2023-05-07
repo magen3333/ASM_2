@@ -1,0 +1,76 @@
+<div th:fragment="info">
+
+<link type="text/css" th:href="@{/css/info.css}" rel="stylesheet" />
+
+  <header class="w3-container" style="padding-top:22px">
+    <h5><b><i class="fa fa-drivers-license-o"></i> Employee Card</b></h5>
+  </header>
+<br>
+
+	<div th:if="${param.successfuly}" class="alert alert-info admin-alert-style center">
+		<div th:if="${param.pass}">Your password has been updated successfully.</div>
+	</div>
+	
+	<div th:if="${param.error}" class="alert alert-info admin-alert-style center">
+		<div th:if="${param.wrongPass}"><span style="color: red">ERROR:</span> Wrong old password.</div>
+	</div>
+
+
+	<table>
+		<tr>
+
+<div class="card-info">
+  <div class="card-body-info">
+    <h5 class="card-title-info"><span th:text="${userObject.getFirstName()}">First</span> <span th:text="${userObject.getLastName()}">Last</span></h5>
+    <h6 th:text="${userObject.getRoles().get(0).getName()}" class="card-subtitle-info">Role</h6>
+    <br>
+    <p class="card-text-info">ID: <span th:text="${userObject.getId()}"></span><br>
+    	Email: <span th:text="${userObject.getEmail()}"></span></p>
+    <p></p>
+  </div>
+</div>
+<br>
+		</tr>
+		</table>
+
+<h5 class="w3-container"><b><i class="fa fa-lock"></i> Change Password</b></h5>
+
+<form name="changePassword" onsubmit="return changePasswordValidate();" class="admin-form-style center" action="/info/password/" method="GET" >
+
+
+
+	<table>
+		<tbody>
+
+		<tr>
+	<div class="form-group">
+		<td><label class="control-label">Old Password: </label></td>
+		<td><input name="oldPass" type="password" /></td>
+	</div>
+		</tr>
+
+		<tr>
+	<div class="form-group">
+		<td><label class="control-label">New Password: </label></td>
+		<td><input name="newPass" type="password" /></td>
+	</div>
+		</tr>
+
+		<tr>
+	<div class="form-group">
+		<td><label class="control-label">Confirm Password: </label></td>
+		<td><input name="confirmNewPass" type="password" /></td>
+	</div>
+		</tr>
+
+		<tr>
+			<td><input id="submitBtn" class="btn btn-success center" type="submit" value=" Save " /></td>
+		</tr>
+		</tbody>
+	</table>
+</form>
+
+   <script type="text/javascript" th:src="@{/js/info.js}"></script>
+
+  
+</div>

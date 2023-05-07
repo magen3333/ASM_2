@@ -1,0 +1,74 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<div th:fragment="calendar">
+<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<link href="../static/css/calendar.css" th:href="@{/css/calendar.css}" rel="stylesheet" />
+
+ 
+
+<br>
+
+<div class="calendar-container">
+  <div class="calendar-header">
+  
+<div th:if="${subPageId == 'shiftsView'}" class="dropdown">
+  <button class="dropbtn">Choose Date <i class="fa fa-caret-down"></i></button>
+  <div class="dropdown-content">
+  	<script type="text/javascript">
+  		var numberOfMonthsBack = 4;
+  		var numberOfFutureMonths = 4;
+		var tempMonth = window["month"]-numberOfMonthsBack;
+  		var tempYear = window["year"];
+  		if (tempMonth < 1)
+  		{
+  			tempMonth = tempMonth + 12; 
+  			tempYear--;
+		}
+		for (var i = 0; i<(numberOfMonthsBack+numberOfFutureMonths+1) ; i++)
+		{
+			if ((tempMonth === window["month"]) && (tempYear === window["year"]))
+				document.write("<a id='currentMonth' href='#'>" + tempMonth + "/"  + tempYear + "</a>");
+			else
+				document.write("<a href='/shifts/view/" + tempYear + "/" + tempMonth + "'>" + tempMonth + "/"  + tempYear + "</a>");
+			tempMonth++;
+			if (tempMonth > 12)
+			{
+				tempYear++;
+				tempMonth = 1;
+			}
+		}
+  	</script>
+  </div>
+</div>
+
+    <h1 id="monthTitle">
+       Month
+    </h1>
+    <p id="year">0000</p>    
+  </div>
+  <div class="calendar">	
+
+
+    <script type="text/javascript" th:src="@{/js/calendar.js}"></script>
+    
+    <script th:if="${subPageId == 'registration'}" type="text/javascript" th:src="@{/js/shiftsRegistrationCalendar.js}"></script>
+
+    <script th:if="${subPageId == 'shiftsView'}" type="text/javascript" th:src="@{/js/shiftsViewCalendar.js}"></script>
+      
+  
+
+  </div>
+</div>
+  
+
+
+ </div> 
+
+
+</body>
+
+</html>

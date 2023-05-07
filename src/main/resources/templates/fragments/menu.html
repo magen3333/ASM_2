@@ -1,0 +1,43 @@
+<div th:fragment="menu">
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+  <div class="w3-container w3-row">
+    <div class="w3-col s4">
+      <img th:src="@{/img/insideAvatar.png}" class="w3-circle w3-margin-right" style="width:46px">
+    </div>
+    <div class="w3-col s8 w3-bar">
+      <span>Welcome <strong th:text="${userObject.getFirstName()}">Name</strong></span><br>
+   	  <a id="userInfoButton" th:href="@{/info}" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>   	  
+    </div>
+  </div>
+  <hr>
+  <div class="w3-container">
+    <h5>Menu</h5>
+  </div>
+  <div class="w3-bar-block">
+    <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i> Close Menu</a>
+    <!-- <a id ="home" href="#" th:href="@{/}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-home fa-fw"></i> Home</a> -->
+    <a id="shiftsView" href="#" th:href="@{/shifts/view}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-calendar fa-fw"></i> Shifts Calendar</a>
+   	<a id="shiftsRegistration" href="#" th:href="@{/shifts/registration}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-calendar fa-fw"></i> Shifts Registration</a>
+   	<a id="about" href="#" th:href="@{/about}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-calendar fa-fw"></i> About</a>
+    <a sec:authorize="hasAuthority('Admin')" id="admin" href="#" th:href="@{/admin}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-user w3-text-red fa-fw"></i> Admin Page</a>
+    <a sec:authorize="hasAuthority('Admin')" id="registration" href="#" th:href="@{/registration}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-user-plus w3-text-red fa-fw"></i> Registration</a>
+    <br><br>
+  </div>
+</nav>
+<script th:inline="javascript">
+var currentPage = /*[[${pageId}]]*/ "";
+if (currentPage === "shifts") {
+	var currentSubPage = /*[[${subPageId}]]*/ "";
+	if (currentSubPage === "registration")
+		currentPage = "shiftsRegistration";
+	else if (currentSubPage === "shiftsView")
+		currentPage = "shiftsView";
+}
+else if (currentPage === "info") 
+	currentPage = "";
+
+if (currentPage !== "")
+	document.getElementById(currentPage).className = "w3-bar-item w3-button w3-padding w3-blue";
+</script>
+</div>

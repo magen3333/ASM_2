@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title th:text="${title}"></title>
+	
+	 <link type="text/css" th:href="@{/css/login.css}" rel="stylesheet" />
+
+	
+	<link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+	<script src="https://kit.fontawesome.com/a81368914c.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<!-- <img class="wave" src="img/wave.png"  alt="  sorry there was a problem ! "/> -->
+	<div class="container">
+		<!--<div class="img">-
+			 <img src="img/bg.svg">
+		</div>-->
+		<div class="login-content">
+			 <form th:action="@{#}" method="post">   <!-- "@{/login}"-->
+				<h2 class="title" id="head">Shift Manager</h2>
+				<img src="img/NewAvatar.png">
+
+				<div th:if="${param.error}">
+
+					<div id="alert">*Invalid username or password.</div>
+
+				</div>	
+           		<div class="input-div one">
+           		   <div class="i">
+           		   		<i class="fas fa-user"></i>
+           		   </div>
+           		   <div class="div">
+           		   		<h5>Username </h5>
+           		   		<input type="text" id="username" name="username" class="input">
+           		   </div>
+           		</div>
+           		<div class="input-div pass">
+           		   <div class="i"> 
+           		    	<i class="fas fa-lock"></i>
+           		   </div>
+           		   <div class="div">
+           		    	<h5>Password</h5>
+           		    	<input type="password" id="password" name="password" class="input">
+            	   </div>
+            	</div>
+				<!-- <div id="RegBotton" class="RegBotton"> <a href="#">  <h6>Dont Have Accont?   RegisterNow</h6> </a>  </div> -->
+            	 <!-- <a href="#">Forgot Password?</a> -->
+            	<input type="submit" name="login-submit" id="login-submit" class="btn" value="Login" > <!-- -->
+            </form>
+        </div>
+    </div>
+
+	<div class="container2">  <span class="greetings"> <h2> Remember The Sky's Is The Limit ! </h2> </span> </div>
+
+
+    <script type="text/javascript" th:src="@{/js/login.js}"></script>
+</body>
+</html>

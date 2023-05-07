@@ -1,0 +1,172 @@
+<html  xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="admin">
+  <header class="w3-container" style="padding-top:22px">
+  <h3><b><i class="fa fa-eercast"></i> Admin Page</b></h3>
+  </header>
+  <link type="text/css" th:href="@{/css/admin.css}" rel="stylesheet" />
+	<script type="text/javascript" th:src="@{/js/admin.js}"></script>
+
+	<div th:if="${param.successfuly}" class="alert alert-info admin-alert-style center">
+		<div th:if="${param.saved}">You've successfully updated the company & manager details</div>
+		<div th:if="${param.deleted}">The user has been successfully deleted</div>
+		<div th:if="${param.generated}">Shifts has been generated successfully. To see the shifts board go to <a href="/shifts/view">Shifts Calendar</a></div>
+		<div th:if="${param.registrationOpened}">Shifts registration has been <span style="color:darkgreen;">opened</span> successfully</div>
+		<div th:if="${param.registrationClosed}">Shifts registration has been <span style="color:red;">closed</span> successfully</div>
+	</div>
+	
+	<div th:if="${param.alert}" class="alert alert-info admin-alert-style center">
+		<div th:if="${param.open_registration}">
+			All the saved shifts for this month will be deleted due to changed number of shifts. Are you sure you want to proceed?
+			<br>
+			<a id="yesLink" href=""><button type="submit" class="btn btn-danger">Yes</button></a>
+			<a href="/admin"><button type="submit" class="btn btn-info">No</button></a>
+			
+			<script th:inline="javascript">
+				/*<![CDATA[*/
+				   document.getElementById("yesLink").href = "/admin/registration/true/" + /*[[( ${#request.getParameter('open_registration')} + '/' + ${#request.getParameter('shiftsNum')} )]]*/ + "";
+				/*]]>*/
+			</script>
+			
+		</div>
+	</div>
+  		
+	<div id="shiftsManagement">
+		<h4 class="section_4"><b><i class="fa fa-calendar-o"></i> Shifts Management</b></h4>
+		<h5 class="section_5"><i class="fa fa-lock"></i><b> Shifts Registration Status: 
+			<span th:if="${isRegistrationOpen}" style="color:green">Open</span>
+			<span th:unless="${isRegistrationOpen}" style="color:red">Closed</span>		
+		</b></h5>
+		
+		<div th:if="${isRegistrationOpen}">
+			<h5 class="section_5"><i class="fa fa-area-chart"></i><b> Shifts Registration Progress: </b></h5>
+		    
+		    <div class="w3-grey progressBar">
+	   	      <div th:if="${percentOfUsersRegisteredTheirShifts >= 75}" th:text="${percentOfUsersRegisteredTheirShifts + '%'}" class="w3-container w3-center w3-padding w3-green" th:style="${'width:' + percentOfUsersRegisteredTheirShifts + '%'}">0%</div>
+	   	      <div th:if="${percentOfUsersRegisteredTheirShifts >= 25 AND percentOfUsersRegisteredTheirShifts < 75}" th:text="${percentOfUsersRegisteredTheirShifts + '%'}" class="w3-container w3-center w3-padding w3-orange" th:style="${'width:' + percentOfUsersRegisteredTheirShifts + '%'}">0%</div>
+	   	      <div th:if="${percentOfUsersRegisteredTheirShifts < 25}" th:text="${percentOfUsersRegisteredTheirShifts + '%'}" class="w3-container w3-center w3-padding w3-red" th:style="${'width:' + percentOfUsersRegisteredTheirShifts + '%'}">0%</div>
+		    </div>
+		</div>
+		
+		<h5 class="section_5"><i class="fa fa-briefcase"></i><b> Shifts Registration Actions: </b></h5>	
+		
+		<div th:if="${isRegistrationOpen}">	
+		
+			<form class="admin-form-style" action="/admin/generate">	
+				<input id="submitBtn" class="btn btn-success btn-lg btn-block"
+					type="submit" value="Generate Shifts" />
+			</form>
+			<br>
+			<form onClick="return confirm('Are you sure you want to close the registration?')" class="admin-form-style" action="/admin/registration/close">	
+				<input id="submitBtn" class="btn btn-danger btn-lg btn-block"
+					type="submit" value="Close Registration" />
+			</form>
+
+		</div>
+
+		<div th:unless="${isRegistrationOpen}">
+
+			<form id="openRegistration" class="admin-form-style" action="/admin/registration/open" onsubmit="openRegistration();">
+				<table id="fields">
+					<tbody>
+					<tr>
+						<td><label class="control-label">Number Of Shifts: </label></td>
+						<td><input th:if="${param.open_registration}" id="shiftsNumber" type="number" min="1" max="4" th:value="${param.shiftsNum}" disabled />
+							<input th:unless="${param.open_registration}" id="shiftsNumber" type="number" min="1" max="4" value="3" /></td>
+					</tr>
+					<tr>
+						<td><label class="control-label">Registration For: </label></td>
+						<td><input th:if="${param.open_registration}" id="dateRegistrationInput" type="month" th:min="${minimalRegistrationDate}" th:value="${param.open_registration}" disabled />
+							<input th:unless="${param.open_registration}" id="dateRegistrationInput" type="month" th:min="${minimalRegistrationDate}" th:value="${minimalRegistrationDate}"  /></td>
+					</tr>
+					</tbody>
+				</table>
+				<input th:unless="${param.open_registration}" id="submitBtn" class="btn btn-success btn-lg btn-block"
+					type="submit" value="Open Registration" />
+			</form>
+
+		</div>
+
+	 </div>
+
+  	<div id="companyAndManagerDetails">
+  		<h4 class="section_4"><b><i class="fa fa-indent"></i> Company & Manager Details</b></h4>
+		  		
+  		<form id="companyAndManagerDetailsForm" class="admin-form-style" action="/admin/save" onsubmit="onSubmitCompanyAndManagerDetails();">
+
+			<table id="fields">
+				<tbody>
+				<tr>
+					<td><label class="control-label">Company Name</label> </td>
+					<td><input id="companyName" class="form-control" th:value="${companyName}" /></td>
+				</tr>
+				<tr>
+					<td><label class="control-label">City</label>  </td>
+					<td><input id="city" class="form-control" th:value="${companyCity}" /></td>
+				</tr>
+				<tr>
+					<td><label class="control-label">Street</label>  </td>
+					<td><input id="street" class="form-control" th:value="${companyStreet}" /></td>
+				</tr>
+				<tr>
+					<td><label class="control-label">Country</label>  </td>
+					<td><input id="country" class="form-control" th:value="${companyCountry}" /></td>
+				</tr>
+				<tr>
+					<td><label class="control-label">Manager Name</label> </td>
+					<td><input id="managerName" class="form-control" th:value="${shiftsManagerName}" /></td>
+				</tr>
+				<tr>
+					<td><label class="control-label">Manager Phone</label>  </td>
+					<td><input id="managerPhone" class="form-control" th:value="${shiftsManagerPhone}" /></td>
+				</tr>
+				<tr>
+					<td><label class="control-label">Manager Email</label> </td>
+					<td><input id="managerEmail" class="form-control" th:value="${shiftsManagerEmail}" /></td>
+				</tr>
+
+				</tbody>
+			</table>
+
+
+			<input id="submitBtn" class="btn btn-success btn-lg btn-block"
+				type="submit" value="Save" />
+		</form>
+  	</div>
+  	
+	<div id="userManagement">
+		<h4 class="section_4"><b><i class="fa fa-users"></i> Workers Management (<span th:text="${users.size()}"></span>)</b></h4>
+
+		  <table id="users">
+		    <thead>
+		        <tr>
+		        	<th> ID </th>
+		            <th> First Name </th>
+		            <th> Last Name </th>
+		            <th> Email </th>
+		            <th> Roles </th>
+					<th> Action </th>
+		            
+		        </tr>
+		    </thead>
+		    <tbody>
+		    <tr th:if="${users.empty}">
+		            <td colspan="2"> No Users Available </td>
+		        </tr>
+		        <tr th:each="user : ${users}">
+		        	<td><span th:text="${user.id}"> ID </span></td>
+		            <td><span th:text="${user.firstName}"> First Name </span></td>
+					<td><span th:text="${user.lastName}"> Last Name </span></td>
+		            <td><span th:text="${user.email}"> Email </span></td>
+					<td th:each="role : ${user.roles}"><span th:text="${role.name}"> Roles </span></td>
+					<td>
+					<form th:if="${user.roles[0].name != 'Admin'}" th:action="@{/admin/delete/{email}(email=${user.email})}" th:object="${email}" method="post">
+		                        <button class="btn btn-danger" type="submit" onClick="return confirm('Are you sure?')">Delete</button>
+		                    </form>
+		        </tr>
+		    </tbody>
+		</table>
+	</div>
+    
+
+</div>
+</html>
